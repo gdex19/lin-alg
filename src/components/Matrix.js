@@ -14,6 +14,7 @@ const Matrix = () => {
 	const [latexMatrix, setLatexMatrix] = useState(
 		"$\\begin{Bmatrix} 0 & 0\\\\0 & 0\\end{Bmatrix}$"
 	);
+  const [inputted, setInputted] = useState(false);
 
 	useEffect(() => {
 		setLatexMatrix(renderLatexMatrix(matrix));
@@ -22,20 +23,22 @@ const Matrix = () => {
 
 	return (
 		<div>
-			<h1>Matrix goes here</h1>
-			<InputSize
-				setMatrixSize={(input) => {
-					setMatrixSize(input);
-				}}
-			/>
+      {!inputted ?
+        <InputSize
+          setMatrixSize={(input) => {
+            setMatrixSize(input);
+            setInputted(true);
+          }}
+        /> :
 			<MatrixInput
 				matrixSize={matrixSize}
 				setMatrix={(input) => {
 					setMatrix(input);
 				}}
 			/>
+      }
 			<Latex>{ latexMatrix }</Latex>
-		</div>
+      </div>
 	);
 };
 
