@@ -1,7 +1,7 @@
 import InputSize from "./InputSize";
 import MatrixInput from "./MatrixInput";
 import { useState, useEffect } from "react";
-import renderLatexMatrix from "../helpers";
+import {renderLatexMatrix, giveSteps } from "../helpers";
 import 'katex/dist/katex.min.css'
 import Latex from 'react-latex-next'
 
@@ -12,7 +12,7 @@ const Matrix = () => {
 		[0, 0],
 	]);
 	const [latexMatrix, setLatexMatrix] = useState(
-		"$\\begin{pmatrix} 0 & 0\\\\0 & 0\\end{pmatrix}$"
+		"$\\begin{Bmatrix} 0 & 0\\\\0 & 0\\end{Bmatrix}$"
 	);
 
 	useEffect(() => {

@@ -1,5 +1,6 @@
 import React from "react";
 import MatrixRow from "./MatrixRow"
+import { giveSteps } from '../helpers.js'
 
 const MatrixInput = ({ matrixSize, setMatrix }) => {
 	let matrix = Array(matrixSize);
@@ -21,6 +22,7 @@ const MatrixInput = ({ matrixSize, setMatrix }) => {
 		}
 		setMatrix(matrix);
     console.log(matrix);
+    giveSteps(matrix);
 	};
 
 	return (
