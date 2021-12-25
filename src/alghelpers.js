@@ -1,3 +1,5 @@
+import { StepHeap } from "./StepHeap";
+
 var Fraction = require("fractional").Fraction;
 
 export const cancelPivot = (row1, row2, ind, multi) => {
@@ -18,12 +20,12 @@ export const multiRow = (row, ind, multi) => {
 
 export const createAugment = (matrix) => {
 	let augmented = new Array(matrix.length);
-  matrix.map((row, ind) => {
-    augmented[ind] = new Array(matrix.length);
-    for (let i = 0; i < row.length; i++) {
-      augmented[ind][i] = new Fraction(row[i]);
-    }
-  });
+	matrix.map((row, ind) => {
+		augmented[ind] = new Array(matrix.length);
+		for (let i = 0; i < row.length; i++) {
+			augmented[ind][i] = new Fraction(row[i]);
+		}
+	});
 	let size = augmented[0].length;
 	for (let i = 0; i < size; i++) {
 		for (let j = 0; j < size; j++) {
@@ -37,7 +39,7 @@ export const giveSteps = (matrix) => {
 	let copy = matrix.map((row) => [...row]);
 	let currCol = 0;
 	let pivot = 0;
-	let steps = [];
+	let steps = new StepHeap();
 
 	while (currCol < matrix.length) {
 		let found = false;
@@ -50,7 +52,7 @@ export const giveSteps = (matrix) => {
 					let temp = copy[pivot];
 					copy[pivot] = copy[i];
 					copy[i] = temp;
-					steps.push({
+					steps.add({
 						type: "switch",
 						row1: i,
 						row2: pivot,
@@ -63,10 +65,13 @@ export const giveSteps = (matrix) => {
 		if (found === true) {
 			for (let i = pivot + 1; i < matrix.length; i++) {
 				let multi = copy[i][currCol] / copy[pivot][currCol];
-        let multiFrac = new Fraction(copy[i][currCol], copy[pivot][currCol]);
+				let multiFrac = new Fraction(
+					copy[i][currCol],
+					copy[pivot][currCol]
+				);
 				if (multi !== 0) {
 					cancelPivot(copy[pivot], copy[i], currCol, multi);
-					steps.push({
+					steps.add({
 						type: "cancel",
 						row1: pivot,
 						row2: i,
@@ -88,10 +93,10 @@ export const giveSteps = (matrix) => {
 		}
 		for (let j = pivot - 1; j >= 0; j--) {
 			let multi = copy[j][i] / copy[pivot][i];
-      let multiFrac = new Fraction(copy[j][i], copy[pivot][i]);
+			let multiFrac = new Fraction(copy[j][i], copy[pivot][i]);
 			if (multi !== 0) {
 				cancelPivot(copy[pivot], copy[j], i, multi);
-				steps.push({
+				steps.add({
 					type: "cancel",
 					row1: pivot,
 					row2: j,
@@ -102,9 +107,9 @@ export const giveSteps = (matrix) => {
 		}
 		if (copy[pivot][i] !== 1) {
 			let multi = 1 / copy[pivot][i];
-      let multiFrac = new Fraction(1, copy[pivot][i]);
+			let multiFrac = new Fraction(1, copy[pivot][i]);
 			multiRow(copy[pivot], i, multi);
-			steps.push({
+			steps.add({
 				type: "multiply",
 				row1: pivot,
 				row2: null,
@@ -116,9 +121,9 @@ export const giveSteps = (matrix) => {
 
 	if (copy[0][0] !== 0 && copy[0][0] !== 1) {
 		let multi = 1 / copy[0][0];
-    let multiFrac = new Fraction(1, copy[0][0]);
+		let multiFrac = new Fraction(1, copy[0][0]);
 		multiRow(copy[0], 0, multi);
-		steps.push({
+		steps.add({
 			type: "multiply",
 			row1: 0,
 			row2: null,
@@ -126,6 +131,5 @@ export const giveSteps = (matrix) => {
 			ind: 0,
 		});
 	}
-	console.log(steps);
-	return steps;
+	return steps.finalize();
 };
