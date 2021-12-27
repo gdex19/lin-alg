@@ -2,6 +2,9 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Credits
+
+Matrix input system created by: https://brocolli.vercel.app/react-matrix/
 ## Available Scripts
 
 In the project directory, you can run:
