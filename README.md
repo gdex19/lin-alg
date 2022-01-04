@@ -1,3 +1,15 @@
+# Gauss-Jordan Elimination Calculator
+
+Fun little project using react to make a one-page matrix input application. Currently
+only works for square matrices. After input, you can iterate through the steps of 
+elimination and get the inverse (if applicable).
+
+## Known bugs
+Since display is using latex fractions, non-reducable fractions can negatively impact GUI.
+Will get around to cleaning this up in the future. Currently a pre-deployment build.
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
