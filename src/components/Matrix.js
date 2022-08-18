@@ -2,7 +2,7 @@ import InputSize from "./InputSize";
 import MatrixInput from "./MatrixInput";
 import { useState } from "react";
 import LatexAugment from "./LatexAugment";
-import { giveSteps, createAugment } from "../alghelpers";
+import { giveSteps, createAugment } from "../utils/alghelpers.js";
 
 const Matrix = () => {
 	const [matrixSize, setMatrixSize] = useState(2);

@@ -19,19 +19,13 @@ export const multiRow = (row, ind, multi) => {
 };
 
 export const createAugment = (matrix) => {
-	let augmented = new Array(matrix.length);
-	matrix.map((row, ind) => {
-		augmented[ind] = new Array(matrix.length);
-		for (let i = 0; i < row.length; i++) {
-			augmented[ind][i] = new Fraction(row[i]);
-		}
+  let len = matrix[0].length;
+	let augmented = matrix.map((row, i) => {
+		for (let j = 0; j < len; j++) {
+      row.push((j === i) ? 1 : 0);
+    }
+    return row;
 	});
-	let size = augmented[0].length;
-	for (let i = 0; i < size; i++) {
-		for (let j = 0; j < size; j++) {
-			augmented[i].push(i === j ? new Fraction(1) : new Fraction(0));
-		}
-	}
 	return augmented;
 };
 

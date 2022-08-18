@@ -1,6 +1,6 @@
 import React from "react";
 import MatrixRow from "./MatrixRow"
-import { giveSteps } from '../alghelpers.js'
+import { giveSteps } from '../utils/alghelpers.js'
 
 const MatrixInput = ({ matrixSize, setMatrix }) => {
 	let matrix = Array(matrixSize);

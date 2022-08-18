@@ -1,14 +1,3 @@
-export const fracToString = (frac) => {
-  if (typeof frac === "string") {
-    return frac;
-  }
-	if (frac.denominator === 1 || frac.numerator === 0) {
-		return frac.numerator.toString();
-	}
-	return "\\frac{" + frac.numerator + "}{" + frac.denominator + "}";
-};
-
-
 // Off stackexchange, credit to @InfiniteSet
 export const convertToRoman = (num) => {
   var rnumerals = { 1 : 'I', 2 : 'II', 3 : 'III', 4 : 'IV', 5 : 'V', 6   : 'VI', 7 : 'VII', 

@@ -2,7 +2,8 @@
 
 export class StepHeap {
 	constructor() {
-		this.steps = [null];
+		this.stack = [];
+    this.queue = [];
 	}
 
 	static compareSteps(step1, step2) {
@@ -86,7 +87,6 @@ export class StepHeap {
 	}
 
 	finalize() {
-		console.log(this.steps);
     let size = this.steps.length;
     while (size > 2) {
       this.kindaPop(size--);

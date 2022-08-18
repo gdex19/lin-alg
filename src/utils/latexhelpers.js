@@ -1,5 +1,4 @@
 import { fracToString, convertToRoman } from "./texthelpers";
-var Fraction = require("fractional").Fraction;
 
 export const renderLatexMatrix = (matrix) => {
 	return (

@@ -1,7 +1,7 @@
 import "katex/dist/katex.min.css";
 import Latex from "react-latex-next";
 import { useEffect, useState } from "react";
-import { renderMatrixAugment, renderSteps } from "../latexhelpers";
+import { renderMatrixAugment, renderSteps } from "../utils/latexhelpers";
 
 const performSwitch = (matrix, action) => {
 	let temp = matrix[action.row1];
