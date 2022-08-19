@@ -1,4 +1,4 @@
-import {createAugment} from '../utils/alghelpers.js';
+import {createAugment, giveSteps } from '../utils/alghelpers.js';
 
 const equalMatrix = (one, two) => {
   for (let i = 0; i < one.length; i++) {
@@ -10,6 +10,7 @@ const equalMatrix = (one, two) => {
   }
   return true;
 }
+
 describe('Augmenting Matrices', () => {
   it('adds identity', () => {
     let matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
@@ -23,5 +24,19 @@ describe('Augmenting Matrices', () => {
     expect(equalMatrix(createAugment(matrix).map((r) => {
       return r.slice(0, 3);
     }),  matrix)).toEqual(true);
+  });
+});
+
+
+describe('Elimination', () => {
+  it('sorts rows', () => {
+    let matrix = [[0, 0, 1], [1, 0, 0], [0, 1, 0]];
+    let ans = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+    expect(equalMatrix(giveSteps(matrix), ans)).toEqual(true);
+  });
+  it('sorts does elimination', () => {
+    let matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+    let ans = [[1, 0, -1], [0, 1, 2], [0, 0 , 0]];
+    expect(equalMatrix(giveSteps(matrix), ans)).toEqual(true);
   });
 })

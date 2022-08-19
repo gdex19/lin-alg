@@ -1,21 +1,38 @@
-import { StepHeap } from "./StepHeap";
+const createStep = (type, from, to, multi=null, col=null) => {
+  return {
+    type: type,
+    from: from,
+    to: to,
+    multi: multi,
+    col: col,
+  }
+}
 
-var Fraction = require("fractional").Fraction;
+const findPivot = (matrix, j) => {
+  for (let i = j; i < matrix.length; i++) {
+    if (matrix[i][j] != 0) {
+      return i;
+    }
+  }
+  return -1;
+}
 
-export const cancelPivot = (row1, row2, ind, multi) => {
-	let len = row1.length;
-	for (let i = ind; i < len; i++) {
-		row2[i] = row2[i] - row1[i] * multi;
+export const swapRows = (matrix, step) => {
+  let temp = matrix[step.to];
+  matrix[step.to] = matrix[step.from];
+  matrix[step.from] = temp;
+}
+
+export const cancelPivot = (matrix, step) => {
+	for (let i = step.col; i < matrix.length; i++) {
+		matrix[step.to][i] = matrix[step.to][i] - matrix[step.from][i] * step.multi;
 	}
-	return 0;
 };
 
-export const multiRow = (row, ind, multi) => {
-	let len = row.length;
-	for (let i = ind; i < len; i++) {
-		row[i] *= multi;
+export const multiRow = (matrix, step) => {
+	for (let i = step.col; i < matrix.length; i++) { 
+    matrix[step.to][i] *= step.multi;
 	}
-	return 0;
 };
 
 export const createAugment = (matrix) => {
@@ -31,99 +48,42 @@ export const createAugment = (matrix) => {
 
 export const giveSteps = (matrix) => {
 	let copy = matrix.map((row) => [...row]);
-	let currCol = 0;
-	let pivot = 0;
-	let steps = new StepHeap();
-
-	while (currCol < matrix.length) {
-		let found = false;
-		for (let i = pivot; i < matrix.length; i++) {
-			if (copy[i][currCol] !== 0) {
-				found = true;
-				if (i === pivot) {
-					break;
-				} else {
-					let temp = copy[pivot];
-					copy[pivot] = copy[i];
-					copy[i] = temp;
-					steps.add({
-						type: "switch",
-						row1: i,
-						row2: pivot,
-						multiplier: null,
-						ind: null,
-					});
-				}
-			}
-		}
-		if (found === true) {
-			for (let i = pivot + 1; i < matrix.length; i++) {
-				let multi = copy[i][currCol] / copy[pivot][currCol];
-				let multiFrac = new Fraction(
-					copy[i][currCol],
-					copy[pivot][currCol]
-				);
-				if (multi !== 0) {
-					cancelPivot(copy[pivot], copy[i], currCol, multi);
-					steps.add({
-						type: "cancel",
-						row1: pivot,
-						row2: i,
-						multiplier: multiFrac,
-						ind: currCol,
-					});
-				}
-			}
-			pivot++;
-		}
-		currCol++;
-	}
-	pivot--;
-
-	for (; pivot > 0; pivot--) {
-		let i = pivot;
-		while (copy[pivot][i] === 0) {
-			i++;
-		}
-		for (let j = pivot - 1; j >= 0; j--) {
-			let multi = copy[j][i] / copy[pivot][i];
-			let multiFrac = new Fraction(copy[j][i], copy[pivot][i]);
-			if (multi !== 0) {
-				cancelPivot(copy[pivot], copy[j], i, multi);
-				steps.add({
-					type: "cancel",
-					row1: pivot,
-					row2: j,
-					multiplier: multiFrac,
-					ind: i,
-				});
-			}
-		}
-		if (copy[pivot][i] !== 1) {
-			let multi = 1 / copy[pivot][i];
-			let multiFrac = new Fraction(1, copy[pivot][i]);
-			multiRow(copy[pivot], i, multi);
-			steps.add({
-				type: "multiply",
-				row1: pivot,
-				row2: null,
-				multiplier: multiFrac,
-				ind: i,
-			});
-		}
-	}
-
-	if (copy[0][0] !== 0 && copy[0][0] !== 1) {
-		let multi = 1 / copy[0][0];
-		let multiFrac = new Fraction(1, copy[0][0]);
-		multiRow(copy[0], 0, multi);
-		steps.add({
-			type: "multiply",
-			row1: 0,
-			row2: null,
-			multiplier: multiFrac,
-			ind: 0,
-		});
-	}
-	return steps.finalize();
+  let rank = 0;
+  let steps = []
+  for (let i = 0; i < matrix.length; i++) {
+    let pivot = findPivot(copy, i);
+    if (pivot == -1) {
+      continue;
+    }
+    else {
+      if (pivot != rank) {
+        let step = createStep("switch", pivot, rank);
+        swapRows(copy, step);
+        steps.push(step);
+      }
+      for (let j = rank + 1; j < matrix.length; j++) {
+        let multi = copy[j][i] / copy[rank][i];
+        if (multi != 0) {
+          let step = createStep("cancel", rank, j, multi, i);
+          cancelPivot(copy, step);
+          steps.push(step);
+        }
+      }
+      let step = createStep("multiply", rank, rank, 1 / copy[rank][i], i);
+      multiRow(copy, step);
+      rank++;
+    }
+    
+  }
+  for (let i = rank - 1; i > 0; i--) {
+    for (let j = i - 1; j >= 0; j--) {
+      let multi = copy[j][i];
+      if (multi != 0) {
+        let step = createStep("cancel", i, j, multi);
+        cancelPivot(copy, step);
+      }
+    }
+  }
+  
+  return copy;
 };
